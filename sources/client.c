@@ -22,6 +22,7 @@ void	string_to_signals(char *str, int server_pid)
 			else
 				kill(server_pid, SIGUSR2);
 			j--;
+			usleep(1000);
 		}
 		i++;
 	}
