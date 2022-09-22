@@ -17,6 +17,19 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
+int	pid_iscorrect(int pid, char *str)
+{
+	int	i;
+
+	i = -1;
+	if (pid <= 0)
+		return (0);
+	while (str[++i])
+		if (!ft_isdigit(str[i]))
+			return(0);
+	return(1);
+}
+
 int	ft_atoi(const char *str)
 {
 	int	i;

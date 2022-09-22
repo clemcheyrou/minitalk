@@ -32,8 +32,13 @@ int	main(int argc, char **argv)
 {
 	int	server_pid;
 
-	(void)argc;
-	server_pid = ft_atoi(argv[1]);
-	string_to_signals(argv[2], server_pid);
+	if (argc == 3 && ft_strlen(argv[1]) == 6)
+	{
+		server_pid = ft_atoi(argv[1]);
+		if (pid_iscorrect(server_pid, argv[1]))
+			string_to_signals(argv[2], server_pid);
+	}
+	else
+		printf("Error\n");
 	return (0);
 }
