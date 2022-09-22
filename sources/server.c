@@ -49,14 +49,12 @@ char	*signals_to_strings(char *str)
 	return (s);
 }
 
-int	main(int argc, char **argv)
+int	main(void)
 {
 	int	my_pid;
-	struct sigaction sa = {0};
-	struct sigaction sb = {0};
+	struct sigaction sa;
+	struct sigaction sb;
 
-	(void)argc;
-	(void)argv;
 	my_pid = getpid();
 	printf("PID = %d\n", my_pid);
 	sa.sa_handler = &handle_sigusr1;
