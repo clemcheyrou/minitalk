@@ -33,6 +33,6 @@ int	main(int argc, char **argv)
 
 	(void)argc;
 	server_pid = ft_atoi(argv[1]);
-	//string_to_signals("lol", server_pid);
+	string_to_signals(argv[2], server_pid);
 	return (0);
 }

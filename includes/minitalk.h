@@ -6,7 +6,7 @@
 # include <signal.h>
 # include <unistd.h>
 
-extern char	g_stock;
+extern char	g_stock[9];
 
 /*						UTILS						*/
 int	ft_strlen(char *str);
