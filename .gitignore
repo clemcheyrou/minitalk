@@ -1,0 +1,3 @@
+*.o
+print_f/*.o
+print_f/libft_t/*.o
