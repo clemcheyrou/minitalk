@@ -23,14 +23,17 @@ INC = -I includes
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g
 RM = @rm -rf
+LIBS = ./print_f/libftprintf.a
 
 all: $(NAME) $(NAME2)
 
 $(NAME): $(OBJ)
+		@make -C ./print_f/
 		@echo "Build $(NAME)"
 		@$(CC) $(FLAGS) $(INC) $(OBJ) -o $(NAME) $(LIBS)
 
 $(NAME2): $(OBJ2)
+		@make -C ./print_f/
 		@echo "Build $(NAME)"
 		@$(CC) $(FLAGS) $(INC) $(OBJ2) -o $(NAME2) $(LIBS)
 
@@ -39,9 +42,11 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 		$(CC) $(FLAGS) $(INC) -o $@ -c $<
 
 clean:
+		@make clean -C ./print_f/
 		$(RM) $(OBJ_PATH)
 
 fclean:	clean
+		make fclean -C ./print_f/ clean 
 		$(RM) $(NAME)
 		$(RM) $(NAME2)
 

@@ -9,7 +9,7 @@ void	string_to_signals(char *str, int server_pid)
 
 	if (str == NULL)
 		return ;
-	size = ft_strlen(str);
+	size = ft_len(str);
 	i = 0;
 	while (i < size)
 	{

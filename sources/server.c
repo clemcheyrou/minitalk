@@ -3,13 +3,13 @@
 void	handle_sigusr1(int sig)
 {
 	(void)sig;
-	printf("1\n");
+	ft_printf("1");
 }
 
 void	handle_sigusr2(int sig)
 {
 	(void)sig;
-	printf("0\n");
+	ft_printf("0");
 }
 
 char	*signals_to_strings(char *str)
@@ -23,7 +23,7 @@ char	*signals_to_strings(char *str)
 
     if (str == NULL)
         return (NULL);
-    size = ft_strlen(str);
+    size = ft_len(str);
 	s = malloc(sizeof(char) * size / 8);
 	if (!s)
 		return (NULL);
