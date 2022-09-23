@@ -22,3 +22,14 @@ int	pid_iscorrect(int pid, char *str)
 			return(0);
 	return(1);
 }
+
+void *ft_realloc(void *str, size_t size)
+{
+    void *newstr;
+    int size_oldstr;
+    size_oldstr = ft_strlen(str);
+    newstr = malloc(size + size_oldstr);
+    memcpy(newstr, str, size + size_oldstr);
+    free(str);
+    return newstr;
+}

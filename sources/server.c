@@ -23,7 +23,7 @@ char	*signals_to_strings(char *str)
 
     if (str == NULL)
         return (NULL);
-    size = ft_len(str);
+    size = ft_strlen(str);
 	s = malloc(sizeof(char) * size / 8);
 	if (!s)
 		return (NULL);
