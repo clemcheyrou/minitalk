@@ -1,52 +1,61 @@
 #include "minitalk.h"
 
+char *globaltab = NULL;
+
 void	handle_sigusr1(int sig)
 {
 	(void)sig;
+	int	i;
+
+	i = 0;
 	ft_printf("1");
+	if (globaltab == NULL)
+		globaltab = malloc(9);
+	while (globaltab[i] != '\0')
+		i++;
+	globaltab[i] = 1;
+	globaltab[i + 1] = '\0';
 }
 
 void	handle_sigusr2(int sig)
 {
 	(void)sig;
+	int	i;
+
+	i = 0;
 	ft_printf("0");
+	if (globaltab == NULL)
+		globaltab = malloc(9);
+	while (globaltab[i] != '\0')
+		i++;
+	globaltab[i] = 0;
+	globaltab[i + 1] = '\0';
 }
 
 char	*signals_to_strings(char *str)
 {
-    int     size;
-    int        i;
-    int        j;
+	int		i;
+	int		j;
 	int		res;
-	char		*s;
-	int		l;
+	char	*new_str;
 
-    if (str == NULL)
-        return (NULL);
-    size = ft_strlen(str);
-	s = malloc(sizeof(char) * size / 8);
-	if (!s)
+	j = ft_strlen(str);
+	new_str = ft_realloc(str, 8);
+	if (!new_str)
 		return (NULL);
-    i = 0;
-	l = 0;
-    while (i < size)
+	i = 0;
+	res = 0;
+    while (i < 8)
     {
-		res = 0;
-		j = 7;
-        while (j >= 0)
-        {
-			if (str[i] == 49)
-				res = res * 2 + 1;
-			else
-				res *= 2 ;
-			j--;
-			i++;
-		}
-		s[l] = res;
-		l++;
+		if (new_str[j - 8] == 49)
+			res = res * 2 + 1;
+		else
+			res *= 2 ;
+		j++;
+		i++;
 	}
-	s[l] = '\0';
-	return (s);
+	new_str[j] = '\0';
+	return (new_str);
 }
 
 int	main(void)
@@ -63,8 +72,12 @@ int	main(void)
 	sigaction(SIGUSR2, &sb, NULL);
 	while (1)
 	{
-		//printf("Wait for msg\n");
-		sleep(5);
+		if (ft_strlen(globaltab) == 8)
+		{
+			ft_printf("ftlen : %d\n", ft_strlen(globaltab));
+			//signals_to_strings(globaltab);
+			sleep(5);
+		}
 	}
 	return (0);
 }
