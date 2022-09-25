@@ -17,7 +17,7 @@ void	handle_sigusr1(int sig)
 		globaltab[i] = '1';
 		globaltab[i + 1] = '\0';
 	}
-	ft_printf("%s\n", globaltab);
+	//ft_printf("%s\n", globaltab);
 }
 
 void	handle_sigusr2(int sig)
@@ -35,30 +35,40 @@ void	handle_sigusr2(int sig)
 		globaltab[i] = '0';
 		globaltab[i + 1] = '\0';
 	}
-	ft_printf("%s\n", globaltab);
+	//ft_printf("%s\n", globaltab);
 }
 
 char	*signals_to_strings(char *str)
 {
 	int		i;
+	int		j;
+	int		l;
 	int		res;
+	char	*newstr;
 
+	newstr = (char *)malloc(sizeof(char) * 100);
 	if (!str)
 		return (NULL);
-	while(str)
-		i = 0;
+	i = 0;
+	j = 0;
+	while(str[i])
+	{
 		res = 0;
-   	while (i < 8)
-    {
-		if (str[i] == 49)
-			res = res * 2 + 1;
-		else
-			res *= 2 ;
-		i++;
+		l = 0;
+		while (l < 8)
+		{
+			if (str[i] == 49)
+				res = res * 2 + 1;
+			else
+				res *= 2 ;
+			i++;
+			l++;
+		}
+		newstr[j]= res;
+		j++;
 	}
-	memset(str, '\0', 100);
-	str[0] = res;
-	return (str);
+	newstr[j] = '\0';
+	return (newstr);
 }
 
 int	main(void)
@@ -66,6 +76,7 @@ int	main(void)
 	int	my_pid;
 	struct sigaction sa;
 	struct sigaction sb;
+	char *newstr;
 
 	my_pid = getpid();
 	printf("PID = %d\n", my_pid);
@@ -75,8 +86,12 @@ int	main(void)
 	sigaction(SIGUSR2, &sb, NULL);
 	while (1)
 	{
-		signals_to_strings(globaltab);
-		printf("%s\n", globaltab);
+		if(ft_strlen(globaltab) == 24)
+		{
+			ft_printf("%d\n", ft_strlen(globaltab));
+			newstr = signals_to_strings(globaltab);
+			ft_printf("%s\n", newstr);
+		}
 		sleep(5);
 	}
 	return (0);
