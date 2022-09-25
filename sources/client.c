@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ccheyrou <ccheyrou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/25 19:06:51 by ccheyrou          #+#    #+#             */
+/*   Updated: 2022/09/25 19:20:57 by ccheyrou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
-void	string_to_signals(char *str, int server_pid)
+static void	string_to_signals(char *str, int server_pid)
 {
 	int		size;
 	int		i;

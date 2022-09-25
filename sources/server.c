@@ -1,76 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ccheyrou <ccheyrou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/25 19:03:18 by ccheyrou          #+#    #+#             */
+/*   Updated: 2022/09/25 19:23:43 by ccheyrou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
-char globaltab[9];
+char	g_tab[9];
 
-void	handle_sigusr1(int sig)
+static void	handle_sigusr1(int sig)
 {
-	(void)sig;
 	int	i;
 
+	(void)sig;
 	i = 0;
-	if (globaltab[0] == '\0')
-		globaltab[i] = '1';
+	if (g_tab[0] == '\0')
+		g_tab[i] = '1';
 	else
 	{
-		while (globaltab[i] != '\0')
+		while (g_tab[i] != '\0')
 			i++;
-		globaltab[i] = '1';
-		globaltab[i + 1] = '\0';
+		g_tab[i] = '1';
+		g_tab[i + 1] = '\0';
 	}
-	//ft_printf("%s\n", globaltab);
 }
 
-void	handle_sigusr2(int sig)
+static void	handle_sigusr2(int sig)
 {
-	(void)sig;
 	int	i;
 
+	(void)sig;
 	i = 0;
-	if (globaltab[0] == '\0')
-		globaltab[i] = '0';
+	if (g_tab[0] == '\0')
+		g_tab[i] = '0';
 	else
 	{
-		while (globaltab[i] != '\0')
+		while (g_tab[i] != '\0')
 			i++;
-		globaltab[i] = '0';
-		globaltab[i + 1] = '\0';
+		g_tab[i] = '0';
+		g_tab[i + 1] = '\0';
 	}
-	//ft_printf("%s\n", globaltab);
 }
-
-// char	*signals_to_strings(char *str)
-// {
-// 	int		i;
-// 	int		l;
-// 	int		res;
-// 	char	*newstr;
-
-// 	newstr = (char *)malloc(sizeof(char) * 2);
-// 	if (!str)
-// 		return (NULL);
-// 	res = 0;
-// 	l = 0;
-// 	i = 0;
-// 	while (l < 8)
-// 	{
-// 		if (str[i] == 49)
-// 			res = res * 2 + 1;
-// 		else
-// 			res *= 2 ;
-// 		i++;
-// 		l++;
-// 	}
-// 	newstr[0]= res;
-// 	newstr[1] = '\0';
-// 	return (newstr);
-// }
 
 char	signals_to_strings(char *str)
 {
 	int		i;
 	int		l;
 	int		res;
-	
+
 	res = 0;
 	l = 0;
 	i = 0;
@@ -85,52 +68,27 @@ char	signals_to_strings(char *str)
 	}
 	return (res);
 }
-// int	main(void)
-// {
-// 	struct sigaction 	sa;
-// 	struct sigaction 	sb;
-// 	int					my_pid;
-// 	char msg;
-// 	char *letter;
 
-// 	msg[0] = 0;
-// 	my_pid = getpid();
-// 	printf("PID = %d\n", my_pid);
-// 	sa.sa_handler = &handle_sigusr1;
-// 	sb.sa_handler = &handle_sigusr2;
-// 	sigaction(SIGUSR1, &sa, NULL);
-// 	sigaction(SIGUSR2, &sb, NULL);
-// 	while (1)
-// 	{
-// 		if (ft_strlen(globaltab) == 8)
-// 		{
-// 			letter = signals_to_strings(globaltab);
-// 			msg = ft_strjoin(&msg, letter);
-// 			free(letter);
-// 			ft_memset(globaltab, '\0', 100);
-// 		}
-// 		else if (ft_strlen(globaltab) == 0 && msg[0] != 0)
-// 		{
-// 			ft_printf("%s\n", msg);
-// 			free(msg);
-// 			msg = malloc(sizeof(char) * 1);
-// 			msg[0] = 0;
-// 		}
-// 		usleep(1000);
-// 	}
-// 	return (0);
-// }
+void	join_char(char **msg, char **tmp)
+{
+	char				letter[2];
+
+	letter[1] = '\0';
+	letter[0] = signals_to_strings(g_tab);
+	*tmp = ft_strjoin(*msg, letter);
+	free(*msg);
+	*msg = *tmp;
+	ft_memset(g_tab, '\0', 9);
+}
 
 int	main(void)
 {
-	struct sigaction 	sa;
-	struct sigaction 	sb;
+	struct sigaction	sa;
+	struct sigaction	sb;
 	int					my_pid;
-	char	*msg;
-	char	*tmp;
-	char	letter[2];
+	char				*msg;
+	char				*tmp;
 
-	letter[1] = '\0';
 	msg = ft_strdup("");
 	my_pid = getpid();
 	printf("PID = %d\n", my_pid);
@@ -140,20 +98,10 @@ int	main(void)
 	sigaction(SIGUSR2, &sb, NULL);
 	while (1)
 	{
-		if (ft_strlen(globaltab) == 8)
-		{
-			letter[0] = signals_to_strings(globaltab);
-			tmp = ft_strjoin(msg, letter);
-			free(msg);
-			msg = tmp;
-			ft_memset(globaltab, '\0', 9);
-		}
-		else if (ft_strlen(globaltab) == 0 && msg[0] != 0)
-		{
-			ft_printf("%s\n", msg);
-			free(tmp);
-			msg = ft_strdup("");
-		}
+		if (ft_strlen(g_tab) == 8)
+			join_char(&msg, &tmp);
+		else if (ft_strlen(g_tab) == 0 && msg[0] != 0)
+			print_msg(&msg, &tmp);
 		usleep(1000);
 	}
 	free(tmp);
