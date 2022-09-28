@@ -6,7 +6,7 @@
 /*   By: ccheyrou <ccheyrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 19:05:43 by ccheyrou          #+#    #+#             */
-/*   Updated: 2022/09/25 19:22:22 by ccheyrou         ###   ########.fr       */
+/*   Updated: 2022/09/28 18:02:09 by ccheyrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,23 @@ int	pid_iscorrect(int pid, char *str)
 	return (1);
 }
 
-void	print_msg(char **msg, char **tmp)
+char	signals_to_strings(char *str)
 {
-	ft_printf("%s\n", *msg);
-	free(*tmp);
-	*msg = ft_strdup("");
+	int		i;
+	int		l;
+	int		res;
+
+	res = 0;
+	l = 0;
+	i = 0;
+	while (l < 8)
+	{
+		if (str[i] == 49)
+			res = res * 2 + 1;
+		else
+			res *= 2 ;
+		i++;
+		l++;
+	}
+	return (res);
 }

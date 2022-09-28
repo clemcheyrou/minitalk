@@ -6,28 +6,38 @@
 /*   By: ccheyrou <ccheyrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 19:03:18 by ccheyrou          #+#    #+#             */
-/*   Updated: 2022/09/25 19:23:43 by ccheyrou         ###   ########.fr       */
+/*   Updated: 2022/09/28 18:02:02 by ccheyrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-char	g_tab[9];
+typedef struct s_mt
+{
+	char	g_tab[9];
+	int		client_pid;
+}	t_mt;
 
-static void	handle_sigusr1(int sig)
+t_mt	g_yo;
+
+//char	g_yo.g_tab[9];
+
+static void	handle_sigusr1(int sig, siginfo_t *info, void *ucontext)
 {
 	int	i;
 
 	(void)sig;
+	(void)ucontext;
+	g_yo.client_pid = info->si_pid;
 	i = 0;
-	if (g_tab[0] == '\0')
-		g_tab[i] = '1';
+	if (g_yo.g_tab[0] == '\0')
+		g_yo.g_tab[i] = '1';
 	else
 	{
-		while (g_tab[i] != '\0')
+		while (g_yo.g_tab[i] != '\0')
 			i++;
-		g_tab[i] = '1';
-		g_tab[i + 1] = '\0';
+		g_yo.g_tab[i] = '1';
+		g_yo.g_tab[i + 1] = '\0';
 	}
 }
 
@@ -37,36 +47,15 @@ static void	handle_sigusr2(int sig)
 
 	(void)sig;
 	i = 0;
-	if (g_tab[0] == '\0')
-		g_tab[i] = '0';
+	if (g_yo.g_tab[0] == '\0')
+		g_yo.g_tab[i] = '0';
 	else
 	{
-		while (g_tab[i] != '\0')
+		while (g_yo.g_tab[i] != '\0')
 			i++;
-		g_tab[i] = '0';
-		g_tab[i + 1] = '\0';
+		g_yo.g_tab[i] = '0';
+		g_yo.g_tab[i + 1] = '\0';
 	}
-}
-
-char	signals_to_strings(char *str)
-{
-	int		i;
-	int		l;
-	int		res;
-
-	res = 0;
-	l = 0;
-	i = 0;
-	while (l < 8)
-	{
-		if (str[i] == 49)
-			res = res * 2 + 1;
-		else
-			res *= 2 ;
-		i++;
-		l++;
-	}
-	return (res);
 }
 
 void	join_char(char **msg, char **tmp)
@@ -74,11 +63,19 @@ void	join_char(char **msg, char **tmp)
 	char				letter[2];
 
 	letter[1] = '\0';
-	letter[0] = signals_to_strings(g_tab);
+	letter[0] = signals_to_strings(g_yo.g_tab);
 	*tmp = ft_strjoin(*msg, letter);
 	free(*msg);
 	*msg = *tmp;
-	ft_memset(g_tab, '\0', 9);
+	ft_memset(g_yo.g_tab, '\0', 9);
+}
+
+void	print_msg(char **msg, char **tmp)
+{
+	ft_printf("%s\n", *msg);
+	free(*tmp);
+	*msg = ft_strdup("");
+	kill(g_yo.client_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -92,15 +89,16 @@ int	main(void)
 	msg = ft_strdup("");
 	my_pid = getpid();
 	printf("PID = %d\n", my_pid);
-	sa.sa_handler = &handle_sigusr1;
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = &handle_sigusr1;
 	sb.sa_handler = &handle_sigusr2;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sb, NULL);
 	while (1)
 	{
-		if (ft_strlen(g_tab) == 8)
+		if (ft_strlen(g_yo.g_tab) == 8)
 			join_char(&msg, &tmp);
-		else if (ft_strlen(g_tab) == 0 && msg[0] != 0)
+		else if (ft_strlen(g_yo.g_tab) == 0 && msg[0] != 0)
 			print_msg(&msg, &tmp);
 		usleep(1000);
 	}
