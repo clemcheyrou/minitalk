@@ -6,7 +6,7 @@
 /*   By: ccheyrou <ccheyrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 19:06:51 by ccheyrou          #+#    #+#             */
-/*   Updated: 2022/09/28 17:55:02 by ccheyrou         ###   ########.fr       */
+/*   Updated: 2022/09/29 11:26:25 by ccheyrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,7 @@ int	main(int argc, char **argv)
 		server_pid = ft_atoi(argv[1]);
 		if (pid_iscorrect(server_pid, argv[1]))
 			string_to_signals(argv[2], server_pid);
-		while(1)
-		{
-			usleep(100);
-		}
+		pause();
 	}
 	else
 		printf("Error\n");
